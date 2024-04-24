@@ -135,3 +135,37 @@ mlflow_config :
   git add .
 git commit -m "commited1"
 git push -u origin main
+```
+
+
+
+Update requirements.txt
+
+```
+dvc
+dvc[gdrive]
+scikit-learn
+pandas
+pytest
+tox
+flake8
+flask
+gunicorn
+mlflow
+
+
+
+```
+
+```
+
+pip install -r requirements.txt
+
+```
+
+create src/get_data.py
+
+```
+
+
+```
