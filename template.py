@@ -1,30 +1,3 @@
-
-Create Environment 
-
-```
-conda create -n wineq python=3.8 -y
-conda activate wineq
-```
-
-Create requirements.txt
-
-
-```
-dvc
-dvc[gdrive]
-scikit-learn
-
-```
-
-```
-pip install -r requirements.txt
-
-```
-
-
-Create template.py 
-
-```
 import os
 
 dirs = [
@@ -52,13 +25,3 @@ files = [
 for file_ in files :
     with open(file_, "w") as f :
         pass
-
-```
-
-```
-python template.py
-
-Observe project directory structure has been created 
-
-
-```
