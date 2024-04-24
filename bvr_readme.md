@@ -62,3 +62,21 @@ Observe project directory structure has been created
 
 
 ```
+
+```
+Download data file (winequality.csv) from 
+
+https://drive.google.com/drive/folders/18zqQiCJVgF7uzXgfbIJ-04zgz1ItNfF5
+
+copy winequality.csv to data_given folder 
+
+```
+
+```
+dvc init
+dvc add data_given/winequality.csv
+git add .
+git commit -m "csv commit"
+git push -u origin main
+
+```
