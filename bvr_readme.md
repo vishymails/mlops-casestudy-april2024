@@ -226,3 +226,23 @@ if __name__ == "__main__" :
 
 
 ```
+
+
+Add stage to dvc.yaml file 
+
+```
+stages :
+  load_data :
+    cmd : python src/load_data.py --config=params.yaml
+    deps :
+      - src/get_data.py
+      - src/load_data.py
+      - data_given/winequality.csv
+    outs :
+      - data/raw/winequality.csv
+
+```
+
+```
+dvc repro
+```
