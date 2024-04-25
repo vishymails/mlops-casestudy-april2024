@@ -578,6 +578,29 @@ def test_generic() :
 pytest -v 
 ```
 
+# Create branding using setup.py and get wheel file 
+
+setup.py
+
+```
+from setuptools import setup, find_packages
+
+setup(
+    name = "src",
+    version="0.0.1",
+    description="Case study project for Oracle India",
+    author="BVR",
+    packages=find_packages(),
+    license="MIT"
+)
+```
+
+
+```
+pip install -e .
+pip freeze
+python setup.py sdist bdist_wheel
+```
 
 
 
