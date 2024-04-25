@@ -475,8 +475,13 @@ stages :
 
 ```
 dvc repro
-```
 
+```
+```
+git add .
+git commit -m "param changes "
+git push -u origin main
+```
 
 View Current metrics 
 
@@ -502,6 +507,11 @@ estimators :
       #alpha : 0.2
       #l1_ratio : 0.2
 ```
+```
+git add .
+git commit -m "param changes "
+git push -u origin main
+```
 
 ```
 dvc repro
@@ -511,3 +521,65 @@ dvc metrics diff
 
 Observe the changes 
 ```
+
+```
+git add .
+git commit -m "param changes "
+git push -u origin main
+```
+
+
+# Now Pipeline tasks are done Lets test using pytest and TOX frameworks
+
+```
+verify pytest and tox are declared in requirements.txt
+```
+
+
+Create tox.ini
+
+```
+[tox]
+envlist = py38
+skipdist = True
+
+[testenv]
+deps = -rrequirements.txt
+command = 
+    pytest -v
+
+```
+
+```
+pytest -v 
+```
+
+
+Create tests folder with test cases
+
+```
+mkdir tests
+touch tests/conftest.py
+touch tests/test_config.py
+touch tests/__init__.py
+```
+
+Update tests/test_config.py
+
+```
+def test_generic() :
+    a = 2
+    b = 2
+    assert a == b
+
+```
+
+```
+pytest -v 
+```
+
+
+
+
+
+
