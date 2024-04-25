@@ -1,3 +1,9 @@
+# local files installation 
+
+-e .
+
+# third party packages 
+
 dvc
 dvc[gdrive]
 scikit-learn

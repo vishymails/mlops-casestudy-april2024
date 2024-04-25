@@ -599,8 +599,28 @@ setup(
 ```
 pip install -e .
 pip freeze
+```
+
+Build your own package commands 
+
+```
 python setup.py sdist bdist_wheel
 ```
+
+
+# Create schema using jupyter lab
+
+```
+pip install jupyterlab
+
+jupyter-lab notebooks/
+
+```
+
+```
+EXECUTE ALL CONTENTS PRESENT IN THE NOTEBOOK1.IPYNB 
+```
+
 
 
 
