@@ -476,3 +476,38 @@ stages :
 ```
 dvc repro
 ```
+
+
+View Current metrics 
+
+```
+dvc repro
+dvc params diff
+dvc metrics show
+dvc metrics diff
+
+You may get blank values in some commands because there are no changes in parameters 
+```
+
+Update params.yaml file 
+
+```
+estimators :
+  ElasticNet :
+    params :
+      alpha : 0.88
+      l1_ratio : 0.11
+      # alpha : 0.9
+      # l1_ratio : 0.4
+      #alpha : 0.2
+      #l1_ratio : 0.2
+```
+
+```
+dvc repro
+dvc params diff
+dvc metrics show
+dvc metrics diff
+
+Observe the changes 
+```
