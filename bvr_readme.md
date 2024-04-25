@@ -665,4 +665,32 @@ tox
 ```
 
 
+# Create UI for created model application 
+
+Create necessary files and folders 
+
+```
+mkdir prediction_service
+  mkdir -p prediction_service/model
+  mkdir webapp
+  touch app.py
+  touch prediction_service/__init__.py
+  touch prediction_service/prediction.py
+  mkdir -p webapp/static/css
+  mkdir -p webapp/static/script
+  touch webapp/static/css/main.css
+  touch webapp/static/script/index.js
+  mkdir  webapp/templates
+  touch webapp/templates/index.html
+  touch webapp/templates/404.html
+  touch webapp/templates/base.html
+
+```
+
+# Copy schema_in.json file from notebooks to prediction_service folder 
+
+# 
+
+
+
 
