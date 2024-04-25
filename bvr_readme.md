@@ -166,6 +166,63 @@ pip install -r requirements.txt
 create src/get_data.py
 
 ```
+import os
+import yaml
+import pandas as pd
+import argparse
+
+def read_params(config_path) :
+    with open(config_path) as yaml_file :
+        config = yaml.safe_load(yaml_file)
+    return config
+
+def get_data(config_path) :
+    config = read_params(config_path)
+
+    print(config)
+
+    data_path = config["data_source"]["s3_source"]
+
+    df = pd.read_csv(data_path, sep=",", encoding="utf-8")
+
+    print(df)
+
+    return df
+
+
+if __name__ == "__main__" :
+    args = argparse.ArgumentParser()
+    args.add_argument("--config", default="params.yaml")
+    parsed_args = args.parse_args()
+    data = get_data(config_path=parsed_args.config)
+```
+
+Create load_data.py 
+
+```
+
+import os
+from get_data import read_params, get_data
+import argparse
+
+def load_and_save(config_path) :
+    config = read_params(config_path)
+    df = get_data(config_path)
+
+    new_cols = [col.replace(" ", "_") for col in df.columns]
+    print(new_cols)
+
+    raw_data_path = config["load_data"]["raw_dataset_csv"]
+
+    df.to_csv(raw_data_path, sep=",", index=False, header=new_cols)
+
+
+if __name__ == "__main__" :
+    args = argparse.ArgumentParser()
+    args.add_argument("--config", default="params.yaml")
+    parsed_args = args.parse_args()
+    load_and_save(config_path=parsed_args.config)
+
 
 
 ```
