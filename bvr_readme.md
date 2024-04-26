@@ -826,6 +826,146 @@ FILL ALL FIELDS WITH 12 (ANY NUMBER) AS VALUES AND SUBMIT TO SEE THE PREDICTED R
 Note : validation is mandatory so we will use component architecture and validation in next steps 
 ```
 
+# Perform validation of fields 
+
+Update prediction.py 
+
+```
+import joblib
+import yaml
+import os
+import json
+import numpy as np
+
+
+
+
+params_path = "params.yaml"
+schema_path = os.path.join("prediction_service", "schema_in.json")
+
+
+class NotInRange(Exception) :
+    def __init__(self, message="value not in given range- by BVR") :
+        self.message = message
+        super().__init__(self.message)
+
+class NotInCols(Exception) :
+    def __init__(self, message="Not in Columns") :
+        self.message = message
+        super().__init__(self.message)
+
+
+
+def read_params(config_path = params_path) :
+    with open(config_path) as yaml_file :
+        config = yaml.safe_load(yaml_file)
+    return config
+
+
+def predict(data) :
+    config = read_params(params_path)
+    model_dir_path = config["webapp_model_dir"]
+    model = joblib.load(model_dir_path)
+    prediction = model.predict(data).tolist()[0]
+    try :
+        if 3 <= prediction <=8 :
+            return prediction
+        else :
+            raise NotInRange
+    except NotInRange :
+        return "UnExpected Result"
+
+
+def get_schema(schema_path = schema_path) :
+    with open(schema_path) as json_file :
+        schema = json.load(json_file)
+    return schema
+
+def validate_input(dict_request) :
+    def _validate_cols(col) :
+        schema = get_schema()
+        actual_cols = schema.keys()
+        if col not in actual_cols :
+            raise NotInCols
+        
+    def _validate_values(col, val) :
+        schema = get_schema()
+        if not (schema[col]["min"] <= float(dict_request[col]) <= schema[col]["max"]) :
+            raise NotInRange
+        
+    for col, val in dict_request.items() :
+        _validate_cols(col)
+        _validate_values(col, val)
+
+    return True 
+
+
+def form_response(dict_request) :
+    if validate_input(dict_request) :
+        data = dict_request.values()
+        data = [list(map(float, data))]
+        response = predict(data)
+        return response
+
+
+def api_response(request) :
+    pass
+
+
+```
+
+
+Update app.py 
+
+```
+from flask import Flask, render_template, request, jsonify
+import os
+from prediction_service import prediction 
+import numpy as np 
+
+
+webapp_root = "webapp"
+
+static_dir = os.path.join(webapp_root, "static")
+template_dir = os.path.join(webapp_root, "templates")
+
+
+
+app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
+
+
+@app.route("/", methods = ["GET", "POST"])
+def index() :
+    if request.method == "POST" :
+        try :
+            if request.form :
+                dict_req = dict(request.form)
+                response = prediction.form_response(dict_req)
+                return render_template("index.html", response=response)
+            elif request.json :
+                response = prediction.api_response(request)
+                return jsonify(response)
+        except Exception as e :
+            print(e)
+            error = {"error" : "Something went wrong !! Try again "}
+            error = {"error" : e}
+            return render_template("404.html", error = error)
+    else :
+        return render_template("index.html")
+    
+
+
+if __name__ == "__main__" :
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    
+
+```
+
+```
+python app.py 
+
+http://localhost:5000
+```
 
 
 
