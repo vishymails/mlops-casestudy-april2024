@@ -909,6 +909,7 @@ def form_response(dict_request) :
 
 
 def api_response(request) :
+
     pass
 
 
@@ -969,3 +970,94 @@ http://localhost:5000
 
 
 
+# API based microservice creation and sending request using postman
+
+
+Update prediction.py 
+
+```
+
+
+def api_response(dict_request) :
+    try :
+        if validate_input(dict_request) :
+            data = np.array([list(dict_request.values())])
+            response = predict(data)
+            response = {"response" : response}
+            return response 
+    except NotInRange as e :
+        response = {"the_expected_range" : get_schema(), "response" : str(e)}
+        print(response)
+
+    except NotInCols as e :
+        response = {"the_expected_cols" : get_schema().keys(), "response" : str(e)}
+        print(response)
+
+    except Exception as e :
+        print(e)
+        error = {"error" : "Something went wrong !! Try Again"}
+        return error
+
+```
+
+
+Update app.py 
+
+```
+
+@app.route("/", methods = ["GET", "POST"])
+def index() :
+    if request.method == "POST" :
+        try :
+            if request.form :
+                dict_req = dict(request.form)
+                response = prediction.form_response(dict_req)
+                return render_template("index.html", response=response)
+            elif request.json :
+                response = prediction.api_response(request.json)
+                return jsonify(response)
+        except Exception as e :
+            print(e)
+            error = {"error" : "Something went wrong !! Try again "}
+            error = {"error" : e}
+            return render_template("404.html", error = error)
+    else :
+        return render_template("index.html")
+    
+```
+
+```
+python app.py 
+```
+
+Run post man 
+
+```
+new Request : http://localhost:5000
+
+METHOD : POST 
+
+TYPE : RAW / JSON 
+
+BODY AS DEFINED 
+
+```
+
+Body 
+
+```
+{
+    "fixed_acidity" : 4.6, 
+    "volatile_acidity" : 0.12,
+    "citric_acid" : 0.1,
+    "residual_sugar" : 0.9,
+    "chlorides" : 0.012,
+    "free_sulfur_dioxide" : 1.0,
+    "total_sulfur_dioxide" : 6.0,
+    "density" : 0.99007,
+    "pH" : 2.74,
+    "sulphates" : 0.33,
+    "alcohol" : 8.4
+}
+
+```
